@@ -29,7 +29,7 @@
             font-size: 1.2rem;
             border-radius: 8px;
             border: 1px solid #ccc;
-            box-sizing: border-box; /* Asegura que el ancho total incluye padding y border */
+            box-sizing: border-box;
         }
         button {
             background-color: #28a745;
@@ -48,17 +48,28 @@
         .tarima-btn {
             width: 45%;
             margin-bottom: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
             padding: 15px;
             font-size: 1.2rem;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
+            border: none;
         }
+        /* Colores diferentes para los botones */
+        .tarima-btn[data-value="T-1"] { background-color: #007bff; }
+        .tarima-btn[data-value="T-2"] { background-color: #28a745; }
+        .tarima-btn[data-value="T-3"] { background-color: #ffc107; }
+        .tarima-btn[data-value="T-4"] { background-color: #dc3545; }
+        .tarima-btn[data-value="T-5"] { background-color: #17a2b8; }
+        .tarima-btn[data-value="T-6"] { background-color: #6f42c1; }
+        .tarima-btn[data-value="T-7"] { background-color: #fd7e14; }
+        .tarima-btn[data-value="T-8"] { background-color: #20c997; }
+        .tarima-btn[data-value="T-9"] { background-color: #e83e8c; }
+        .tarima-btn[data-value="T-10"] { background-color: #343a40; }
+
+        /* Cambiar color en hover */
         .tarima-btn:hover {
-            background-color: #0056b3;
+            filter: brightness(90%);
         }
     </style>
 </head>
@@ -84,6 +95,7 @@
                 <button type="button" class="tarima-btn" data-value="T-7">T-7</button>
                 <button type="button" class="tarima-btn" data-value="T-8">T-8</button>
                 <button type="button" class="tarima-btn" data-value="T-9">T-9</button>
+                <button type="button" class="tarima-btn" data-value="T-10">T-10</button>
             </div>
 
             <input type="hidden" id="tarima" name="tarima" required>
@@ -118,8 +130,7 @@
                     // Guardar el valor seleccionado en el input oculto
                     tarimaInput.value = this.getAttribute('data-value');
                     // Resaltar el botón seleccionado
-                    tarimaButtons.forEach(btn => btn.style.backgroundColor = '#007bff'); // Reiniciar color
-                    this.style.backgroundColor = '#0056b3'; // Cambiar color al seleccionado
+                    tarimaButtons.forEach(btn => btn.style.backgroundColor = btn.getAttribute('data-value') !== tarimaInput.value ? btn.style.backgroundColor : btn.style.backgroundColor = '#0056b3');
                 });
             });
         };
@@ -154,6 +165,7 @@
             .then(response => {
                 if (response.ok) {
                     alert('Datos enviados correctamente');
+                    window.close(); // Cierra la página después de enviar los datos
                 } else {
                     alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
                 }
