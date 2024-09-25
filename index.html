@@ -30,21 +30,46 @@
 <body>
 
     <div class="container">
-        <h2>Ingrese la tarima</h2>
-        <p>Por favor, ingrese la tarima donde está almacenada la lona.</p>
+        <h2>Registrar Tarima</h2>
         <form id="tarimaForm">
-            <input type="text" id="tarima" placeholder="Tarima (T1-T9)" required>
-            <input type="hidden" id="issueKey" value="IMP-691"> <!-- Cambiar esto si se pasa dinámicamente -->
+            <label for="issueKey">Clave de la incidencia:</label>
+            <input type="text" id="issueKey" name="issueKey" readonly>
+
+            <label for="summary">Resumen de la incidencia:</label>
+            <input type="text" id="summary" name="summary" readonly>
+
+            <label for="tarima">Tarima:</label>
+            <input type="text" id="tarima" name="tarima" placeholder="Tarima (T1-T9)" required>
+
             <button type="submit">Enviar</button>
         </form>
     </div>
 
     <script>
+        // Función para obtener parámetros de la URL
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                issueKey: params.get('issueKey'),
+                summary: params.get('summary')
+            };
+        }
+
+        // Precargar issueKey y summary en el formulario
+        window.onload = function() {
+            const { issueKey, summary } = getQueryParams();
+
+            // Precargar los valores en los inputs
+            document.getElementById('issueKey').value = issueKey || 'No disponible';
+            document.getElementById('summary').value = summary || 'No disponible';
+        };
+
         document.getElementById('tarimaForm').addEventListener('submit', function(event) {
             event.preventDefault();
             
             const tarima = document.getElementById('tarima').value;
             const issueKey = document.getElementById('issueKey').value;
+            const summary = document.getElementById('summary').value;
 
             // URL del webhook en Make.com
             const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
@@ -57,12 +82,16 @@
                 },
                 body: JSON.stringify({
                     issueKey: issueKey,
+                    summary: summary,
                     tarima: tarima
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                alert('Datos enviados correctamente');
+            .then(response => {
+                if (response.ok) {
+                    alert('Datos enviados correctamente');
+                } else {
+                    alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
