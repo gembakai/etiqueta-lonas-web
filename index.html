@@ -164,8 +164,14 @@
             })
             .then(response => {
                 if (response.ok) {
-                    alert('Datos enviados correctamente');
-                    window.close(); // Cierra la página después de enviar los datos
+                    // Mostrar un mensaje de confirmación en la página
+                    document.body.innerHTML = `<div style="text-align: center; font-size: 1.5rem; margin-top: 50px;">
+                        <p>¡Datos enviados correctamente!</p>
+                        <p>Ya puedes cerrar esta ventana.</p>
+                    </div>`;
+                    
+                    // Usar history.replaceState para que no puedan volver al formulario
+                    window.history.replaceState(null, null, window.location.href);
                 } else {
                     alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
                 }
@@ -174,6 +180,11 @@
                 console.error('Error:', error);
                 alert('Hubo un error al enviar los datos.');
             });
+        });
+
+        // Evitar que el usuario regrese al formulario usando el botón de "atrás"
+        window.addEventListener('popstate', function(event) {
+            window.history.pushState(null, null, window.location.href);
         });
     </script>
 
