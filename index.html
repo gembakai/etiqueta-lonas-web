@@ -34,7 +34,7 @@
         <p>Por favor, ingrese la tarima donde está almacenada la lona.</p>
         <form id="tarimaForm">
             <input type="text" id="tarima" placeholder="Tarima (T1-T9)" required>
-            <input type="hidden" id="issueKey" value="IMP-691">
+            <input type="hidden" id="issueKey" value="IMP-691"> <!-- Cambiar esto si se pasa dinámicamente -->
             <button type="submit">Enviar</button>
         </form>
     </div>
@@ -47,8 +47,9 @@
             const issueKey = document.getElementById('issueKey').value;
 
             // URL del webhook en Make.com
-            const webhookUrl = 'https://hook.integromat.com/tu-webhook';
+            const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
 
+            // Enviar los datos al webhook
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
