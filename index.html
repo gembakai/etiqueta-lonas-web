@@ -19,28 +19,73 @@
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
         }
-        input, button {
-            padding: 10px;
+        input, button, select {
+            padding: 15px;
             margin: 10px 0;
             width: 100%;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .tarima-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .tarima-btn {
+            width: 45%;
+            margin-bottom: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .tarima-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>Registrar Tarima donde puso la lona</h2>
+        <h2>Registrar Tarima</h2>
         <form id="tarimaForm">
             <label for="issueKey">Clave de la incidencia:</label>
-            <input type="text" id="issueKey" name="issueKey" required>
+            <input type="text" id="issueKey" name="issueKey" readonly>
 
             <label for="summary">Resumen de la incidencia:</label>
-            <input type="text" id="summary" name="summary" required>
+            <input type="text" id="summary" name="summary" readonly>
 
-            <label for="tarima">Tarima:</label>
-            <input type="text" id="tarima" name="tarima" placeholder="Tarima (T1-T9)" required>
+            <label for="tarima">Selecciona la tarima:</label>
+            <div class="tarima-options">
+                <button type="button" class="tarima-btn" data-value="T-1">T-1</button>
+                <button type="button" class="tarima-btn" data-value="T-2">T-2</button>
+                <button type="button" class="tarima-btn" data-value="T-3">T-3</button>
+                <button type="button" class="tarima-btn" data-value="T-4">T-4</button>
+                <button type="button" class="tarima-btn" data-value="T-5">T-5</button>
+                <button type="button" class="tarima-btn" data-value="T-6">T-6</button>
+                <button type="button" class="tarima-btn" data-value="T-7">T-7</button>
+                <button type="button" class="tarima-btn" data-value="T-8">T-8</button>
+                <button type="button" class="tarima-btn" data-value="T-9">T-9</button>
+            </div>
 
+            <input type="hidden" id="tarima" name="tarima" required>
             <button type="submit">Enviar</button>
         </form>
     </div>
@@ -62,6 +107,20 @@
             // Precargar los valores en los inputs
             document.getElementById('issueKey').value = issueKey || 'No disponible';
             document.getElementById('summary').value = summary || 'No disponible';
+
+            // Manejo de selección de tarima con botones
+            const tarimaButtons = document.querySelectorAll('.tarima-btn');
+            const tarimaInput = document.getElementById('tarima');
+
+            tarimaButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Guardar el valor seleccionado en el input oculto
+                    tarimaInput.value = this.getAttribute('data-value');
+                    // Resaltar el botón seleccionado
+                    tarimaButtons.forEach(btn => btn.style.backgroundColor = '#007bff'); // Reiniciar color
+                    this.style.backgroundColor = '#0056b3'; // Cambiar color al seleccionado
+                });
+            });
         };
 
         document.getElementById('tarimaForm').addEventListener('submit', function(event) {
@@ -70,6 +129,11 @@
             const tarima = document.getElementById('tarima').value;
             const issueKey = document.getElementById('issueKey').value;
             const summary = document.getElementById('summary').value;
+
+            if (!tarima) {
+                alert('Por favor, selecciona una tarima.');
+                return;
+            }
 
             // URL del webhook en Make.com
             const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
