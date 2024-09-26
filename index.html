@@ -162,7 +162,7 @@
             }
 
             // URL del webhook en Make.com
-            const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
+            const webhookUrl = 'https://hook.us1.make.com/ipcdhx1lbqpp71bi788dhoe4beljeip2';
 
             // Enviar los datos al webhook
             fetch(webhookUrl, {
@@ -178,9 +178,11 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Mostrar un mensaje de confirmación en la página
+                    // Mostrar un mensaje de confirmación en la página con la información seleccionada
                     document.body.innerHTML = `<div style="text-align: center; font-size: 1.5rem; margin-top: 50px;">
                         <p>¡Datos enviados correctamente!</p>
+                        <p>Haz asignado la tarima "${tarima}" a la lona ${issueKey}.</p>
+                        <p>Resumen: ${summary}</p>
                         <p>Ya puedes cerrar esta ventana.</p>
                     </div>`;
                     
