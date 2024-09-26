@@ -54,6 +54,7 @@
             text-align: center;
             cursor: pointer;
             border: none;
+            transition: all 0.2s ease-in-out;
         }
         /* Colores diferentes para los botones */
         .tarima-btn[data-value="T-1"] { background-color: #007bff; }
@@ -69,7 +70,12 @@
 
         /* Cambiar color en hover */
         .tarima-btn:hover {
-            filter: brightness(50%);
+            filter: brightness(90%);
+        }
+        /* Botón seleccionado con opacidad y escala */
+        .tarima-btn.selected {
+            opacity: 0.9;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -127,10 +133,17 @@
 
             tarimaButtons.forEach(button => {
                 button.addEventListener('click', function() {
+                    // Limpiar la selección previa
+                    tarimaButtons.forEach(btn => {
+                        btn.classList.remove('selected');
+                        btn.style.filter = 'none'; // Restablecer filtro a su valor original
+                    });
+                    
                     // Guardar el valor seleccionado en el input oculto
                     tarimaInput.value = this.getAttribute('data-value');
+
                     // Resaltar el botón seleccionado
-                    tarimaButtons.forEach(btn => btn.style.backgroundColor = btn.getAttribute('data-value') !== tarimaInput.value ? btn.style.backgroundColor : btn.style.backgroundColor = '#0056b3');
+                    this.classList.add('selected');
                 });
             });
         };
