@@ -161,32 +161,38 @@
                 return;
             }
 
-            // URL del webhook en Make.com
-            const webhookUrl = 'https://hook.us1.make.com/ipcdhx1lbqpp71bi788dhoe4beljeip2';
+            // Mensaje para actualizar el campo CF10151 en Jira
+            const bodyData = JSON.stringify({
+                fields: {
+                    customfield_10151: `Lona guardada en tarima ${tarima}`
+                }
+            });
 
-            // Enviar los datos al webhook
-            fetch(webhookUrl, {
-                method: 'POST',
+            // Enviar la solicitud a la API de Jira para actualizar el campo
+            const jiraApiUrl = `https://publiex.atlassian.net/rest/api/3/issue/${issueKey}`;
+            const apiToken = 'ATATT3xFfGF0aTvS8_E3zdaqHqj_qN-xgokYGphJneJuWR1gnRXUl43JYnq0hYg1dnnPWLoHYVgGCYTzFDwCzvgFnd78kupxdATQqDJ12RNWxCmnhqi3xe_Vhf1ewgoETnKM4Gmpl0gB9Z8MVcXRE_SlNpmEecd3USrIMehwqiav0tNqtPTNE7A=0DD79C9D'; // Reemplaza con tu token de API
+
+            fetch(jiraApiUrl, {
+                method: 'PUT',
                 headers: {
+                    'Authorization': `Basic ${btoa('admin@publiexcr.com:' + apiToken)}`,
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    issueKey: issueKey,
-                    summary: summary,
-                    tarima: tarima
-                })
+                body: bodyData
             })
             .then(response => {
                 if (response.ok) {
-                    // Mostrar un mensaje de confirmación en la página con la información seleccionada
+                    // Mostrar un mensaje de confirmación en la página
                     document.body.innerHTML = `<div style="text-align: center; font-size: 1.5rem; margin-top: 50px;">
                         <p>¡Datos enviados correctamente!</p>
                         <p>Haz asignado la tarima "${tarima}" a la lona ${issueKey}.</p>
-                        <p>${summary}</p>
+                        <p>Resumen: ${summary}</p>
+                        <p>El campo CF10151 ha sido actualizado en Jira.</p>
                         <p>Ya puedes cerrar esta ventana.</p>
                     </div>`;
                     
-                    // Usar history.replaceState para que no puedan volver al formularios
+                    // Usar history.replaceState para que no puedan volver al formulario
                     window.history.replaceState(null, null, window.location.href);
                 } else {
                     alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
