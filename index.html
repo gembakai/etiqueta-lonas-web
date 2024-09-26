@@ -78,6 +78,11 @@
             transform: scale(1.10); /* Aumento del 10% */
             border: 3px solid black; /* Borde negro */
         }
+        .error-message {
+            color: red;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +113,9 @@
             <input type="hidden" id="tarima" name="tarima" required>
             <button type="submit">Enviar</button>
         </form>
+
+        <!-- Div para mostrar mensajes de error -->
+        <div id="error-message" class="error-message"></div>
     </div>
 
     <script>
@@ -199,8 +207,9 @@
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al enviar los datos.');
+                // Mostrar el error en la pantalla
+                const errorMessage = document.getElementById('error-message');
+                errorMessage.innerText = `Hubo un error al enviar los datos: ${error.message}`;
             });
         });
 
