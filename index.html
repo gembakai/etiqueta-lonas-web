@@ -48,8 +48,8 @@
             </div>
             <div class="check-shadow"></div>
         </div>
-        <!-- Texto de éxito -->
-        <div id="success-text" style="text-align: center; font-size: 1.5rem; margin-top: 20px;"></div>
+        <!-- Caja de texto estilizada -->
+        <div id="success-text" class="success-box" style="text-align: center;"></div>
     </div>
 
     <script>
@@ -93,6 +93,7 @@
                 return;
             }
 
+            // URL del nuevo webhook
             const webhookUrl = 'https://hook.us1.make.com/0npoekbhlvsbqaecq76y1q5go1dsf3rw';
 
             fetch(webhookUrl, {
@@ -108,11 +109,12 @@
                     document.getElementById('form-container').style.display = 'none';
                     document.getElementById('success-animation').style.display = 'flex';
 
-                    // Agregar el mensaje de éxito
+                    // Agregar el mensaje de éxito estilizado
                     document.getElementById('success-text').innerHTML = `
-                        ¡Haz registrado correctamente la lona <strong>${issueKey}</strong>!<br>
-                        Resumen: ${summary}<br>
-                        Tarima asignada: ${tarima}
+                        <h3>¡Registro exitoso!</h3>
+                        <p>Haz registrado correctamente la lona <strong>${issueKey}</strong>.</p>
+                        <p>Resumen: ${summary}</p>
+                        <p>Tarima asignada: <strong>${tarima}</strong></p>
                     `;
                 } else {
                     return response.text().then(text => { throw new Error(text) });
