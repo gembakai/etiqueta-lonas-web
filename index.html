@@ -195,7 +195,7 @@
                     // Usar history.replaceState para que no puedan volver al formulario
                     window.history.replaceState(null, null, window.location.href);
                 } else {
-                    alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
+                    return response.text().then(text => { throw new Error(text) });
                 }
             })
             .catch(error => {
