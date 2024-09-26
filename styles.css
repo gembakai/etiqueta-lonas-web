@@ -59,9 +59,21 @@ button:hover {
     cursor: pointer;
     border: none;
     transition: all 0.2s ease-in-out;
-    background-color: #007bff;
 }
 
+/* Colores para los botones */
+.tarima-btn[data-value="T-1"] { background-color: #007bff; }
+.tarima-btn[data-value="T-2"] { background-color: #28a745; }
+.tarima-btn[data-value="T-3"] { background-color: #ffc107; }
+.tarima-btn[data-value="T-4"] { background-color: #dc3545; }
+.tarima-btn[data-value="T-5"] { background-color: #17a2b8; }
+.tarima-btn[data-value="T-6"] { background-color: #6f42c1; }
+.tarima-btn[data-value="T-7"] { background-color: #fd7e14; }
+.tarima-btn[data-value="T-8"] { background-color: #20c997; }
+.tarima-btn[data-value="T-9"] { background-color: #e83e8c; }
+.tarima-btn[data-value="T-10"] { background-color: #343a40; }
+
+/* Botón seleccionado */
 .tarima-btn.selected {
     opacity: 0.9;
     transform: scale(1.10);
@@ -126,7 +138,6 @@ button:hover {
     0% {
         opacity: 0;
         transform: scale(0);
-        box-shadow: 0px 0px 0px 65px rgba(255, 255, 255, 0.25) inset, 0px 0px 0px 65px rgba(255, 255, 255, 0.25) inset;
     }
     25% {
         opacity: 1;

@@ -48,6 +48,8 @@
             </div>
             <div class="check-shadow"></div>
         </div>
+        <!-- Texto de éxito -->
+        <div id="success-text" style="text-align: center; font-size: 1.5rem; margin-top: 20px;"></div>
     </div>
 
     <script>
@@ -91,7 +93,7 @@
                 return;
             }
 
-            const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
+            const webhookUrl = 'https://hook.us1.make.com/0npoekbhlvsbqaecq76y1q5go1dsf3rw';
 
             fetch(webhookUrl, {
                 method: 'POST',
@@ -105,6 +107,13 @@
                     // Mostrar la animación de éxito y ocultar el formulario
                     document.getElementById('form-container').style.display = 'none';
                     document.getElementById('success-animation').style.display = 'flex';
+
+                    // Agregar el mensaje de éxito
+                    document.getElementById('success-text').innerHTML = `
+                        ¡Haz registrado correctamente la lona <strong>${issueKey}</strong>!<br>
+                        Resumen: ${summary}<br>
+                        Tarima asignada: ${tarima}
+                    `;
                 } else {
                     return response.text().then(text => { throw new Error(text) });
                 }
