@@ -4,85 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Tarima</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 400px;
-            width: 100%;
-        }
-        input, button, select {
-            padding: 15px;
-            margin: 10px 0;
-            width: 100%;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .tarima-options {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .tarima-btn {
-            width: 45%;
-            margin-bottom: 10px;
-            padding: 15px;
-            font-size: 1.2rem;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s ease-in-out;
-        }
-        /* Colores diferentes para los botones */
-        .tarima-btn[data-value="T-1"] { background-color: #231f20; }
-        .tarima-btn[data-value="T-2"] { background-color: #3f5dab; }
-        .tarima-btn[data-value="T-3"] { background-color: #fed402; }
-        .tarima-btn[data-value="T-4"] { background-color: #d07828; }
-        .tarima-btn[data-value="T-5"] { background-color: #4ea546; }
-        .tarima-btn[data-value="T-6"] { background-color: #8862aa; }
-        .tarima-btn[data-value="T-7"] { background-color: #9f1c20; }
-        .tarima-btn[data-value="T-8"] { background-color: #00bab9; }
-        .tarima-btn[data-value="T-9"] { background-color: #7c7776; }
-        .tarima-btn[data-value="T-10"] { background-color: #c44d9c; }
-
-        /* Cambiar color en hover */
-        .tarima-btn:hover {
-            filter: brightness(90%);
-        }
-        /* Botón seleccionado con opacidad, escala y borde negro */
-        .tarima-btn.selected {
-            opacity: 0.9;
-            transform: scale(1.10); /* Aumento del 10% */
-            border: 3px solid black; /* Borde negro */
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Archivo CSS externo -->
 </head>
 <body>
 
-    <div class="container">
+    <div class="container" id="form-container">
         <h2>Registrar Tarima</h2>
         <form id="tarimaForm">
             <label for="issueKey">Clave de la incidencia:</label>
@@ -108,6 +34,20 @@
             <input type="hidden" id="tarima" name="tarima" required>
             <button type="submit">Enviar</button>
         </form>
+
+        <div id="error-message" class="error-message"></div>
+    </div>
+
+    <!-- Contenedor de la animación de éxito -->
+    <div class="main-container" id="success-animation" style="display:none;">
+        <div class="check-container">
+            <div class="check-background">
+                <svg viewBox="0 0 65 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 25L27.3077 44L58.5 7" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <div class="check-shadow"></div>
+        </div>
     </div>
 
     <script>
@@ -120,7 +60,6 @@
             };
         }
 
-        // Precargar issueKey y summary en el formulario
         window.onload = function() {
             const { issueKey, summary } = getQueryParams();
 
@@ -128,22 +67,13 @@
             document.getElementById('issueKey').value = issueKey || 'No disponible';
             document.getElementById('summary').value = summary || 'No disponible';
 
-            // Manejo de selección de tarima con botones
             const tarimaButtons = document.querySelectorAll('.tarima-btn');
             const tarimaInput = document.getElementById('tarima');
 
             tarimaButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Limpiar la selección previa
-                    tarimaButtons.forEach(btn => {
-                        btn.classList.remove('selected');
-                        btn.style.filter = 'none'; // Restablecer filtro a su valor original
-                    });
-                    
-                    // Guardar el valor seleccionado en el input oculto
+                    tarimaButtons.forEach(btn => btn.classList.remove('selected'));
                     tarimaInput.value = this.getAttribute('data-value');
-
-                    // Resaltar el botón seleccionado
                     this.classList.add('selected');
                 });
             });
@@ -161,46 +91,27 @@
                 return;
             }
 
-            // URL del webhook en Make.com
-            const webhookUrl = 'https://hook.us1.make.com/0npoekbhlvsbqaecq76y1q5go1dsf3rw';
+            const webhookUrl = 'https://hook.us1.make.com/pog4pia4adv445nw8h2y5cgxp85bv2kk';
 
-            // Enviar los datos al webhook
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    issueKey: issueKey,
-                    summary: summary,
-                    tarima: tarima
-                })
+                body: JSON.stringify({ issueKey, summary, tarima })
             })
             .then(response => {
                 if (response.ok) {
-                    // Mostrar un mensaje de confirmación en la página con la información seleccionada
-                    document.body.innerHTML = `<div style="text-align: center; font-size: 1.5rem; margin-top: 50px;">
-                        <p>¡Datos enviados correctamente!</p>
-                        <p>Haz asignado la tarima "${tarima}" a la lona ${issueKey}.</p>
-                        <p>Resumen: ${summary}</p>
-                        <p>Ya puedes cerrar esta ventana.</p>
-                    </div>`;
-                    
-                    // Usar history.replaceState para que no puedan volver al formulario
-                    window.history.replaceState(null, null, window.location.href);
+                    // Mostrar la animación de éxito y ocultar el formulario
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('success-animation').style.display = 'flex';
                 } else {
-                    alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
+                    return response.text().then(text => { throw new Error(text) });
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al enviar los datos.');
+                document.getElementById('error-message').innerText = `Hubo un error al enviar los datos: ${error.message}`;
             });
-        });
-
-        // Evitar que el usuario regrese al formulario usando el botón de "atrás"
-        window.addEventListener('popstate', function(event) {
-            window.history.pushState(null, null, window.location.href);
         });
     </script>
 
