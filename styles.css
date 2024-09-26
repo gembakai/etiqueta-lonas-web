@@ -62,16 +62,16 @@ button:hover {
 }
 
 /* Colores para los botones */
-.tarima-btn[data-value="T-1"] { background-color: #007bff; }
-.tarima-btn[data-value="T-2"] { background-color: #28a745; }
-.tarima-btn[data-value="T-3"] { background-color: #ffc107; }
-.tarima-btn[data-value="T-4"] { background-color: #dc3545; }
-.tarima-btn[data-value="T-5"] { background-color: #17a2b8; }
-.tarima-btn[data-value="T-6"] { background-color: #6f42c1; }
-.tarima-btn[data-value="T-7"] { background-color: #fd7e14; }
-.tarima-btn[data-value="T-8"] { background-color: #20c997; }
-.tarima-btn[data-value="T-9"] { background-color: #e83e8c; }
-.tarima-btn[data-value="T-10"] { background-color: #343a40; }
+.tarima-btn[data-value="T-1"] { background-color: #231f20; }
+.tarima-btn[data-value="T-2"] { background-color: #3f5dab; }
+.tarima-btn[data-value="T-3"] { background-color: #fed402; }
+.tarima-btn[data-value="T-4"] { background-color: #d07828; }
+.tarima-btn[data-value="T-5"] { background-color: #4ea546; }
+.tarima-btn[data-value="T-6"] { background-color: #8862aa; }
+.tarima-btn[data-value="T-7"] { background-color: #9f1c20; }
+.tarima-btn[data-value="T-8"] { background-color: #00bab9; }
+.tarima-btn[data-value="T-9"] { background-color: #7c7776; }
+.tarima-btn[data-value="T-10"] { background-color: #c44d9c; }
 
 /* Botón seleccionado */
 .tarima-btn.selected {
