@@ -95,6 +95,8 @@ button:hover {
     font-size: 1.2rem;
     color: #155724;
     max-width: 400px;
+    width: 80%; /* Cambiado a 80% */
+    margin: 0 auto; /* Centrar la caja */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
