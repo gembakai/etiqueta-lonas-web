@@ -74,6 +74,8 @@ button:hover {
 .tarima-btn[data-value="T-10"] { background-color: #c44d9c; }
 .tarima-btn[data-value="T-11"] { background-color: #11376f; }
 .tarima-btn[data-value="T-12"] { background-color: #ea341c; }
+.tarima-btn[data-value="T-13"] { background-color: #074600; }
+.tarima-btn[data-value="T-14"] { background-color: #ab594e; }
 
 /* Botón seleccionado */
 .tarima-btn.selected {
