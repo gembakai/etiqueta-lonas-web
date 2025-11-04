@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Tarima</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Archivo CSS externo -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Librería para leer códigos QR -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 </head>
 <body>
 
@@ -39,6 +41,9 @@
             <button type="submit">Enviar</button>
         </form>
 
+        <button type="button" id="scanQrBtn" style="margin-top:15px;">📷 Escanear otro código</button>
+        <div id="qr-reader" style="width:300px; margin:20px auto; display:none;"></div>
+
         <div id="error-message" class="error-message"></div>
     </div>
 
@@ -52,12 +57,11 @@
             </div>
             <div class="check-shadow"></div>
         </div>
-        <!-- Caja de texto estilizada -->
         <div id="success-text" class="success-box" style="text-align: center;"></div>
     </div>
 
     <script>
-        // Función para obtener parámetros de la URL
+        // === Obtener parámetros desde la URL ===
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return {
@@ -68,10 +72,8 @@
 
         window.onload = function() {
             const { issueKey, summary } = getQueryParams();
-
-            // Precargar los valores en los inputs
-            document.getElementById('issueKey').value = issueKey || 'No disponible';
-            document.getElementById('summary').value = summary || 'No disponible';
+            document.getElementById('issueKey').value = issueKey || '';
+            document.getElementById('summary').value = summary || '';
 
             const tarimaButtons = document.querySelectorAll('.tarima-btn');
             const tarimaInput = document.getElementById('tarima');
@@ -85,9 +87,9 @@
             });
         };
 
+        // === Enviar formulario ===
         document.getElementById('tarimaForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            
             const tarima = document.getElementById('tarima').value;
             const issueKey = document.getElementById('issueKey').value;
             const summary = document.getElementById('summary').value;
@@ -97,29 +99,39 @@
                 return;
             }
 
-            // URL del nuevo webhook
             const webhookUrl = 'https://hook.us1.make.com/0npoekbhlvsbqaecq76y1q5go1dsf3rw';
 
             fetch(webhookUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ issueKey, summary, tarima })
             })
             .then(response => {
                 if (response.ok) {
-                    // Mostrar la animación de éxito y ocultar el formulario
                     document.getElementById('form-container').style.display = 'none';
                     document.getElementById('success-animation').style.display = 'flex';
-
-                    // Agregar el mensaje de éxito estilizado
                     document.getElementById('success-text').innerHTML = `
                         <h3>¡Registro exitoso!</h3>
-                        <p>Haz registrado correctamente la lona <strong>${issueKey}</strong>.</p>
+                        <p>Has registrado correctamente la lona <strong>${issueKey}</strong>.</p>
                         <p>Resumen: ${summary}</p>
                         <p>Tarima asignada: <strong>${tarima}</strong></p>
+                        <br>
+                        <button id="volver-btn" style="
+                            background-color:#4CAF50;
+                            color:white;
+                            border:none;
+                            padding:10px 20px;
+                            font-size:16px;
+                            border-radius:8px;
+                            cursor:pointer;
+                            margin-top:10px;
+                        ">Registrar otra tarima</button>
                     `;
+                    document.getElementById('volver-btn').addEventListener('click', () => {
+                        limpiarFormulario();
+                        document.getElementById('form-container').style.display = 'block';
+                        document.getElementById('success-animation').style.display = 'none';
+                    });
                 } else {
                     return response.text().then(text => { throw new Error(text) });
                 }
@@ -127,6 +139,58 @@
             .catch(error => {
                 document.getElementById('error-message').innerText = `Hubo un error al enviar los datos: ${error.message}`;
             });
+        });
+
+        // === Limpiar formulario ===
+        function limpiarFormulario() {
+            const form = document.getElementById('tarimaForm');
+            form.reset();
+            document.getElementById('tarima').value = '';
+            document.querySelectorAll('.tarima-btn').forEach(btn => btn.classList.remove('selected'));
+            document.getElementById('issueKey').value = '';
+            document.getElementById('summary').value = '';
+        }
+
+        // === Detectar botón "atrás" del navegador ===
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === "back_forward") {
+                limpiarFormulario();
+            }
+        });
+
+        // === Escanear código QR ===
+        document.getElementById('scanQrBtn').addEventListener('click', () => {
+            const qrContainer = document.getElementById('qr-reader');
+            qrContainer.style.display = 'block';
+
+            const html5QrCode = new Html5Qrcode("qr-reader");
+
+            html5QrCode.start(
+                { facingMode: "environment" },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                qrCodeMessage => {
+                    try {
+                        const url = new URL(qrCodeMessage);
+                        const issueKey = url.searchParams.get("issueKey");
+                        const summary = url.searchParams.get("summary");
+
+                        if (issueKey && summary) {
+                            document.getElementById('issueKey').value = issueKey;
+                            document.getElementById('summary').value = summary;
+                            alert("✅ Código escaneado correctamente");
+                        } else {
+                            alert("⚠️ El QR no contiene los datos esperados.");
+                        }
+                    } catch (e) {
+                        alert("❌ No se reconoció el formato del QR.");
+                    }
+
+                    html5QrCode.stop().then(() => {
+                        qrContainer.style.display = 'none';
+                    });
+                },
+                errorMessage => console.log("Escaneando...", errorMessage)
+            ).catch(err => console.error("No se pudo iniciar el lector QR:", err));
         });
     </script>
 
